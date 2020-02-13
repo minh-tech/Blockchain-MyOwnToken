@@ -1,34 +1,34 @@
 const DappToken = artifacts.require("DappToken");
 
 contract("DappToken", (accounts) => {
-	let dappToken;
+	var dappToken;
 
 	before(async () => {
 		dappToken = await DappToken.deployed();
 	});
 
 	it('initializes the contract with the correct value', async () => {
-		var name = await dappToken.name();
+		let name = await dappToken.name();
 		assert.equal(name, 'Minh Token', 'has the correct name');
 
-		var symbol = await dappToken.symbol();
+		let symbol = await dappToken.symbol();
 		assert.equal(symbol, 'MiT', 'has the correct symbol');
 
-		var standard = await dappToken.standard();
+		let standard = await dappToken.standard();
 		assert.equal(standard, 'Minh Token v1.0', 'has the correct standard');
 	});
 
 	it('sets the total supply upon deployment', async () => {
-		var totalSupply = await dappToken.totalSupply();
+		let totalSupply = await dappToken.totalSupply();
 		assert.equal(totalSupply.toNumber(), 1000000, 'sets the total supply to 1,000,000');
 
-		var adminBalance = await dappToken.balanceOf(accounts[0]);
+		let adminBalance = await dappToken.balanceOf(accounts[0]);
 		assert.equal(adminBalance.toNumber(), 1000000, 'allocates the initial supply to the admin account');
 	});
 
 	it('transfer token ownership', async () => {
-		var total = 1000000;
-		var amount = 250000;
+		let total = 1000000;
+		let amount = 250000;
 		try {
         	await dappToken.transfer(accounts[1], 999999999);
         	assert.fail();
@@ -36,7 +36,7 @@ contract("DappToken", (accounts) => {
         	assert(error.message.indexOf('revert') >= 0, "error message must contain revert");
       	}
 
-      	var success;
+      	let success;
       	try {
       		success = await dappToken.transfer.call(accounts[1], amount, { from: accounts[0] });
       	} catch(error) {
@@ -45,7 +45,7 @@ contract("DappToken", (accounts) => {
       		assert.equal(success, true, 'should return true');
       	}
       	
-      	var receipt = await dappToken.transfer(accounts[1], amount, { from: accounts[0] });
+      	let receipt = await dappToken.transfer(accounts[1], amount, { from: accounts[0] });
 
       	assert.equal(receipt.logs.length, 1, 'triggers one event');
       	assert.equal(receipt.logs[0].event, 'Transfer', 'should be the "Transfer" event');
@@ -53,7 +53,7 @@ contract("DappToken", (accounts) => {
       	assert.equal(receipt.logs[0].args._to, accounts[1], 'logs the account the tokens are transferred to');
       	assert.equal(receipt.logs[0].args._value, amount, 'logs the transfer amount');
 
-      	var balance = await dappToken.balanceOf(accounts[1]);
+      	let balance = await dappToken.balanceOf(accounts[1]);
       	assert.equal(balance.toNumber(), amount, 'adds the amount to the receiving account');
       	balance = await dappToken.balanceOf(accounts[0]);
       	assert.equal(balance.toNumber(), total - amount, 'deduct the amount from the sending account');
@@ -61,8 +61,8 @@ contract("DappToken", (accounts) => {
 	})
 
 	it('approves tokens for delegated transfer', async () => {
-		var amount = 100;
-		var success;
+		let amount = 100;
+		let success;
       	try {
       		success = await dappToken.approve.call(accounts[1], amount, { from: accounts[0] });
       	} catch(error) {
@@ -71,7 +71,7 @@ contract("DappToken", (accounts) => {
       		assert.equal(success, true, 'should return true');
       	}
 
-      	var receipt = await dappToken.approve(accounts[1], amount, { from: accounts[0] });
+      	let receipt = await dappToken.approve(accounts[1], amount, { from: accounts[0] });
 
       	assert.equal(receipt.logs.length, 1, 'triggers one event');
       	assert.equal(receipt.logs[0].event, 'Approval', 'should be the "Approval" event');
@@ -79,7 +79,7 @@ contract("DappToken", (accounts) => {
       	assert.equal(receipt.logs[0].args._spender, accounts[1], 'logs the account the tokens are authorized to');
       	assert.equal(receipt.logs[0].args._value, amount, 'logs the transfer amount');
 
-      	var allowance = await dappToken.allowance(accounts[0], accounts[1]);
+      	let allowance = await dappToken.allowance(accounts[0], accounts[1]);
       	assert.equal(allowance.toNumber(), 100, 'stores the allowance for delegated transfer');
 
 	});
@@ -109,7 +109,7 @@ contract("DappToken", (accounts) => {
       	}
 
       	// Transfer successful
-      	var success;
+      	let success;
       	try {
       		success = await dappToken.transferFrom.call(fromAccount, toAccount, 10, { from: spendingAccount });
       	} catch(error) {
@@ -118,7 +118,7 @@ contract("DappToken", (accounts) => {
       		assert.equal(success, true, 'should return true');
       	}
 
-      	var receipt = await dappToken.transferFrom(fromAccount, toAccount, 10, { from: spendingAccount });
+      	let receipt = await dappToken.transferFrom(fromAccount, toAccount, 10, { from: spendingAccount });
 
       	assert.equal(receipt.logs.length, 1, 'triggers one event');
       	assert.equal(receipt.logs[0].event, 'Transfer', 'should be the "Transfer" event');
@@ -126,13 +126,13 @@ contract("DappToken", (accounts) => {
       	assert.equal(receipt.logs[0].args._to, toAccount, 'logs the account the tokens are transferred to');
       	assert.equal(receipt.logs[0].args._value, 10, 'logs the transfer amount');
 
-      	var balance = await dappToken.balanceOf(fromAccount);
+      	let balance = await dappToken.balanceOf(fromAccount);
       	assert.equal(balance.toNumber(), 90, 'deducts the amount from the sending account');
 
       	balance = await dappToken.balanceOf(toAccount);
       	assert.equal(balance.toNumber(), 10, 'deducts the amount from the receiving account');
 
-      	var allowance = await dappToken.allowance(fromAccount, spendingAccount);
+      	let allowance = await dappToken.allowance(fromAccount, spendingAccount);
       	assert.equal(allowance.toNumber(), 0, 'deducts the amount from the allowance');
 
 	});
