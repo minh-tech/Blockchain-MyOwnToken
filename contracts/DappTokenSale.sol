@@ -7,15 +7,52 @@ import "./DappToken.sol";
  */
 contract DappTokenSale {
 
-	address admin;
+	address payable admin;
 	DappToken public tokenContract;
 	uint256 public tokenPrice;
+	uint256 public tokensSold;
 
-  constructor(DappToken _tokenContract, uint256 _tokenPrice) public {
+	event Sell(
+		address _buyer,
+		uint256 _amount
+	);
 
-  	admin = msg.sender;
-  	tokenContract = _tokenContract;
-  	tokenPrice = _tokenPrice;
+	constructor(DappToken _tokenContract, uint256 _tokenPrice) public {
 
-  }
+	  	admin = msg.sender;
+	  	tokenContract = _tokenContract;
+	  	tokenPrice = _tokenPrice;
+
+
+  	}
+
+  	function multiply(uint x, uint y) internal pure returns(uint z) {
+  		require(y == 0 || (z = x * y) / y == x, "ds-math-mul-overflow");
+  	}
+  	
+  	function buyTokens(uint256 _numberOfTokens) public payable {
+
+  		require (msg.value == multiply(_numberOfTokens, tokenPrice));
+  		require (tokenContract.balanceOf(address(this)) >= _numberOfTokens);
+
+  		// Transfer _numberOfTokens to sender, return true
+  		require (tokenContract.transfer(msg.sender, _numberOfTokens));
+  				
+  		tokensSold += _numberOfTokens;
+
+  		emit Sell(msg.sender, _numberOfTokens);
+  		
+  	}
+
+  	function endSale() public {
+  		
+  		// Admin can end sale
+  		require (msg.sender == admin);
+  		// Transfer all remain tokens to admin
+  		require (tokenContract.transfer(admin, tokenContract.balanceOf(address(this))));
+
+  		// End the contract and transfer ethers to admin
+  		selfdestruct(admin);
+
+  	}
 }
