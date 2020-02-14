@@ -22,14 +22,14 @@ contract DappTokenSale {
 	  	admin = msg.sender;
 	  	tokenContract = _tokenContract;
 	  	tokenPrice = _tokenPrice;
-
-
   	}
 
+  	// Return x * y or an exception in case of uint overflow.
   	function multiply(uint x, uint y) internal pure returns(uint z) {
   		require(y == 0 || (z = x * y) / y == x, "ds-math-mul-overflow");
   	}
   	
+  	// Buy the number of tokens from this contract
   	function buyTokens(uint256 _numberOfTokens) public payable {
 
   		require (msg.value == multiply(_numberOfTokens, tokenPrice));
@@ -41,9 +41,9 @@ contract DappTokenSale {
   		tokensSold += _numberOfTokens;
 
   		emit Sell(msg.sender, _numberOfTokens);
-  		
   	}
 
+  	// Only admin can end this contract
   	function endSale() public {
   		
   		// Admin can end sale
@@ -53,6 +53,5 @@ contract DappTokenSale {
 
   		// End the contract and transfer ethers to admin
   		selfdestruct(admin);
-
   	}
 }
