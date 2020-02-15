@@ -43,6 +43,12 @@ App = {
 		App.contracts.DappTokenSale = new web3.eth.Contract(jsonTokenSale.abi, dataTokenSale.address);
 		App.contracts.DappToken = new web3.eth.Contract(jsonToken.abi, dataToken.address);
 
+		// Listen for events emitted from the contract
+		App.contracts.DappTokenSale.events.Sell({}, {
+			toBlock: 'latest'
+		}, (error, event) => {
+			App.render();
+		});
 
 		return App.render();
 	},
@@ -90,10 +96,7 @@ App = {
 		});
 
 		$('form').trigger('reset');
-		console.log(result);
 
-		$("#loader").hide();
-		$("#content").show();
 	}
 }
 
