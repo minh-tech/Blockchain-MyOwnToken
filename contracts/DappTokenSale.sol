@@ -22,6 +22,7 @@ contract DappTokenSale {
 	  	admin = msg.sender;
 	  	tokenContract = _tokenContract;
 	  	tokenPrice = _tokenPrice;
+
   	}
 
   	// Return x * y or an exception in case of uint overflow.
@@ -43,6 +44,11 @@ contract DappTokenSale {
   		emit Sell(msg.sender, _numberOfTokens);
   	}
 
+  	// Check account is admin
+  	function isAdmin(address account) public view returns(bool res) {
+  		return (admin == account);
+  	}
+  	
   	// Only admin can end this contract
   	function endSale() public {
   		
@@ -53,5 +59,6 @@ contract DappTokenSale {
 
   		// End the contract and transfer ethers to admin
   		selfdestruct(admin);
+
   	}
 }

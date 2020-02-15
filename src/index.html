@@ -17,8 +17,9 @@
   				<br/>
   			</div>
   			<div id="loader">
-  				<p class="text-center">Loading...</p>
+  				<p id="notification" class="text-center">Loading...</p>
   			</div>
+
 	  		<div id="content" class="text-center" style="display: none;">
 	  			<p>
 	  				Introducing "MinhTech Token" (MiT)!
@@ -26,16 +27,12 @@
 	  				You currently have <span class="dapp-balance">1</span> MiT.
 	  			</p>
 	  			<br/>
-	  			<form onsubmit="App.buyTokens(); return false;" role="form">
-	  				<div class="form-group">
-	  					<div class="input-group">
-	  						<input id="numberOfTokens" class="form-control input-lg" type="number" name="number" value="1" min="1" pattern="[0-9]">
-	  						</input>
-	  						<span class="input-group-btn">
-	  							<button type="submit" class="btn btn-primary btn-lg">Buy Tokens</button>
-	  						</span>
-	  					</div>
-	  				</div>
+	  			<form onsubmit="App.buyTokens(); return false;" role="form" class="input-group mb-3">
+						<input id="numberOfTokens" class="form-control" type="number" name="number" value="1" min="1" pattern="[0-9]">
+						</input>
+						<div class="input-group-append">
+							<button type="submit" class="btn btn-primary">Buy Tokens</button>
+						</div>
 	  			</form>
 	  			<br>
 	  			<div class="progress">
@@ -45,6 +42,26 @@
 	  			<p><span class="tokens-sold">1</span> / <span class="tokens-available">1</span> tokens sold</p>
 	  			<hr>
 	  			<p id="accountAddress">0x0</p>
+	  		</div>
+
+	  		<div id="admin" class="text-center" style="display: none;">
+					<p>
+  					Admin currently have <span class="dapp-balance">1</span> MiT.
+  					Input the number of tokens to transfer to Token Sale.
+  				</p>
+					<br/>
+	  			<form onsubmit="App.transferTokens(); return false;" role="form" class="input-group mb-3">
+	  				  <div class="input-group-prepend">
+						    <span class="input-group-text">MiT</span>
+						  </div>
+						<input id="tokensAvailable" type="number" class="form-control" value="1" min="1" pattern="[0-9]">
+						<div class="input-group-append">
+							<button type="submit" class="btn btn-primary">Transfer</button>
+						</div>
+					</form>
+					<button onclick="App.endSale(); return false;" id="endBtn" type="button" class="btn btn-danger btn-block">End Sale</button>
+					<hr>
+	  			<p id="adminAddress">0x0</p>
 	  		</div>
   		</div>
   	</div>

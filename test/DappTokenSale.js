@@ -25,6 +25,9 @@ contract("DappTokenSale", (accounts) => {
 
 		let _tokenPrice = await dappTokenSale.tokenPrice();
 		assert.equal(_tokenPrice, tokenPrice, 'token price is correct');
+
+		// let _tokensAvailable = await dappTokenSale.tokensAvailable();
+		// assert.equal(_tokensAvailable, tokensAvailable, 'token available is correct');
 	});
 
 	it('facilitates token buying', async () => {
